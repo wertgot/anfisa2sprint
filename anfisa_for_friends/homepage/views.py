@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 
 from ice_cream.models import IceCream
@@ -8,7 +9,10 @@ def index(request):
     # Запишите в переменную ice_cream_list новый QuerySet
     ice_cream_list = IceCream.objects.values(
         'id', 'title', 'description'
-    ).filter(is_on_main=True, is_published=True)
+    ).filter(
+        Q(is_published=True)
+        & (Q(is_on_main=True) | Q(title__contains='пломбир'))
+    )
     context = {
         'ice_cream_list': ice_cream_list,
     }
