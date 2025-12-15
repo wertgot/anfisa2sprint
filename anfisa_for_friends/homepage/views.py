@@ -6,7 +6,6 @@ from ice_cream.models import IceCream
 
 def index(request):
     template = 'homepage/index.html'
-    # Запишите в переменную ice_cream_list новый QuerySet
     ice_cream_list = IceCream.objects.values(
         'id', 'title', 'description'
     ).filter(
@@ -14,7 +13,7 @@ def index(request):
         & (Q(is_on_main=True) | Q(title__contains='пломбир'))
     ).order_by(
         'title'
-    )
+    )[:3]
     context = {
         'ice_cream_list': ice_cream_list,
     }
