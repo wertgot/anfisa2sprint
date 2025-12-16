@@ -1,4 +1,3 @@
-from django.db.models import Q
 from django.shortcuts import render
 
 from ice_cream.models import IceCream
@@ -6,14 +5,12 @@ from ice_cream.models import IceCream
 
 def index(request):
     template = 'homepage/index.html'
-    ice_cream_list = IceCream.objects.values(
-        'id', 'title', 'description'
+    ice_cream_list = IceCream.objects.select_related(
+        'category'
     ).filter(
-        Q(is_published=True)
-        & (Q(is_on_main=True) | Q(title__contains='пломбир'))
-    ).order_by(
-        'title'
-    )[:3]
+        is_published=True,
+        category__is_published=True
+    )
     context = {
         'ice_cream_list': ice_cream_list,
     }
